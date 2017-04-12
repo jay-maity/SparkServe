@@ -383,13 +383,13 @@ getDataFiles();
                         $('#job_status').css('color','green');
                         $('#job_status').html(result.state);  
                         alert('Job Completed');
-                        $('#job_output').html(result.print);
+                        $('#job_output').html('<pre>'+result.print+'</pre>');
                         $('#download_results_but').show();
                         
                     }else if(result.state == 'dead'){
                         $('#job_status').css('color','red');
                         $('#job_status').html(result.state);
-                        $('#job_log').html("Error: "+result.print+"<br>Log: "+result.log); 
+                        $('#job_log').html("Error: <pre>"+result.print+"</pre><br>Log: <pre>"+result.log+'</pre>'); 
                         $('#download_results_but').hide();
                         
                     }else{
@@ -434,7 +434,7 @@ function checkStatus(fileid, execid) {
                     if(result.state == 'success'){
                          $('#job_status').css('color','green'); 
                          $('#job_status').html(result.state);  
-                         $('#job_output').html(result.print);
+                         $('#job_output').html('<pre>'+result.print+'</pre>');
                         alert('Job Completed');
                         $('#download_results_but').show();
                         
@@ -442,7 +442,7 @@ function checkStatus(fileid, execid) {
                     }else if(result.state == 'dead'){
                         $('#job_status').css('color','red'); 
                         $('#job_status').html(result.state); 
-                        $('#job_log').html("Error: "+result.print+"<br>Log: "+result.log); 
+                        $('#job_log').html("Error: <pre>"+result.print+"</pre><br>Log: <pre>"+result.log+'</pre>'); 
                         $('#download_results_but').hide(); 
                        
                     }else{
