@@ -194,6 +194,7 @@
                                <label>Job Status</label> <br>
                                <label> Job Id : <span id="job_id_label"> </span></label><br>
                                <label> Status : <span id="job_status"> </span></label><br>
+                               <label id="job_log"> </label><br>
 
                                </div>
                             </div>
@@ -224,7 +225,9 @@
     function toggle_inputdata_check(id){
         if($('#input_data_true_'+id).is(':checked')){
             $('#input_arg_'+id).attr('disabled','disabled');
+            $('#input_arg_'+id).val($('#select_input_data').find(":selected").text());
         }else{
+            $('#input_arg_'+id).val("");
             $('#input_arg_'+id).removeAttr('disabled');
         }
     }
@@ -336,9 +339,11 @@ getDataFiles();
             url: 'api/file/'+input_file+'/execute',
             type: 'POST',
             data: JSON.stringify(jsonObj),
+
             success: completeHandler = function (data) {
                     data = JSON.parse(data);
                     $('#job_status').css('color','black'); 
+                    $('#job_log').html("");
                 if(data.status == 'success'){
                     
                     var result = data.result;
@@ -354,7 +359,8 @@ getDataFiles();
                         
                     }else if(result.state == 'dead'){
                         $('#job_status').css('color','red');
-                        $('#job_status').html(result.state); 
+                        $('#job_status').html(result.state);
+                        $('#job_log').html("<br>Log: "+result.log); 
                         
                     }else{
                         $('#job_status').html(result.state+'...');
@@ -402,7 +408,8 @@ function checkStatus(fileid, execid) {
                         
                     }else if(result.state == 'dead'){
                         $('#job_status').css('color','red'); 
-                        $('#job_status').html(result.state);  
+                        $('#job_status').html(result.state); 
+                        $('#job_log').html("<br>Log: "+result.log);  
                        
                     }else{
                         $('#job_status').html(result.state+'...');  
