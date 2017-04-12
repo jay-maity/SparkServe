@@ -264,6 +264,7 @@ getDataFiles();
 });
     function getProgFiles(){
         $('#select_prg_msg').html("");
+        $('#select_input_prog').html('');
         $.ajax({
             url: 'api/files',
             
@@ -362,6 +363,7 @@ getDataFiles();
         $('#job_id').val("");
         $('#job_id_label').html("");
         $('#job_status').html(""); 
+         $('#job_output').html('');
         $.ajax({
             url: 'api/file/'+input_file+'/execute',
             type: 'POST',
