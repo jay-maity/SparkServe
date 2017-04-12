@@ -263,6 +263,7 @@ def job_status(fileid, execid):
     output["result"]["print"] = printed_output
     output["result"]["id"] = execid
     output["result"]["state"] = status_output.json()["state"]
+    output["result"]["state"] = livy_log
 
     return JSONOutputConverter.getString(output)
 
