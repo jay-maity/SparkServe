@@ -27,7 +27,7 @@
                         <a class="active-menu" href="index.html"><i class="fa fa-dashboard"></i> Create Spark Job</a>
                     </li>
                     <li>
-                        <a href="ui-elements.html"><i class="fa fa-desktop"></i>Cluster Monitoring</a>
+                        <a target="_blank" href="http://199.60.17.159:3000/dashboard/db/server-metrics-collectd?refresh=5s&orgId=1"><i class="fa fa-desktop"></i>Cluster Monitoring</a>
                     </li>
 					
 
@@ -200,7 +200,33 @@
                             </div>
                             <!-- /.row (nested) -->
                         </div>
+                        </div>
+                        </div>
+                        <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Step 5
+                        </div>
+                        <div class="panel-body">
+                            <div class="row" >
+                            <div class="col-lg-6">
+                                   
+                                    <div class="form-group">
+                               <label>Download the Results</label>
+                               <br>
+                               <input type="button" class="btn btn-success" id="download_results_but" value="Download Results" name="download_results" onclick="download_results()"> 
+
+
+                               </div>
+                               
+                               
+                                <!-- /.col-lg-6 (nested) -->
+                            </div>
+
+                            
+                            <!-- /.row (nested) -->
+                        </div>
                         <!-- /.panel-body -->
+                    </div>
                     </div>
                 </div>
                 <!-- /. ROW  -->
@@ -356,15 +382,18 @@ getDataFiles();
                         $('#job_status').css('color','green');
                         $('#job_status').html(result.state);  
                         alert('Job Completed');
+                        $('#download_results_but').show();
                         
                     }else if(result.state == 'dead'){
                         $('#job_status').css('color','red');
                         $('#job_status').html(result.state);
                         $('#job_log').html("<br>Log: "+result.log); 
+                        $('#download_results_but').hide();
                         
                     }else{
                         $('#job_status').html(result.state+'...');
-                        checkStatus(input_file, result.id)
+                        checkStatus(input_file, result.id);
+                        $('#download_results_but').hide();
                     }
                     
                 }
@@ -403,16 +432,20 @@ function checkStatus(fileid, execid) {
                     if(result.state == 'success'){
                          $('#job_status').css('color','green'); 
                          $('#job_status').html(result.state);  
+
                         alert('Job Completed');
+                        $('#download_results_but').show();
                         
                         
                     }else if(result.state == 'dead'){
                         $('#job_status').css('color','red'); 
                         $('#job_status').html(result.state); 
-                        $('#job_log').html("<br>Log: "+result.log);  
+                        $('#job_log').html("<br>Log: "+result.log); 
+                        $('#download_results_but').hide(); 
                        
                     }else{
                         $('#job_status').html(result.state+'...');  
+                        $('#download_results_but').hide();
                         setTimeout(checkStatus(fileid, execid), interval);
                     }
 
@@ -427,6 +460,34 @@ function checkStatus(fileid, execid) {
     });
 }
 
+    function download_results(){
+        var job_id = $('#job_id').val();
+
+        $.ajax({
+            
+            url: 'api/file/'+job_id+'/output',
+            success: function (data) {
+
+                    data = JSON.parse(data);
+                    
+                if(data.status == 'fail'){
+                    result = data.result;
+
+                    alert('Download Failed ' +result.message + " , Please try again");
+                   
+
+                    
+                }
+                   
+            },
+            complete: function (data) {
+                    // Schedule the next
+
+                    
+            }
+    });
+
+    }
 
     </script>
 

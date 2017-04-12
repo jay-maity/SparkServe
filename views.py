@@ -267,8 +267,8 @@ def job_status(fileid, execid):
 
     return JSONOutputConverter.getString(output)
 
-@app.route('/api/file/<fileid>/<execid>/output')
-def get_output(fileid, execid):
+@app.route('/api/file/<execid>/output')
+def get_output(execid):
     """
     get the status
     :return:
