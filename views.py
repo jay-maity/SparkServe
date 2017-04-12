@@ -207,8 +207,10 @@ def execute_file(fileid):
     output["status"] = "success"
     output["result"] = dict()
 
-    output["print"] = printed_output
-    output["id"] = exec_id
+    output["result"]["print"] = printed_output
+    output["result"]["id"] = exec_id
+    output["result"]["state"] = exec_output["status"]
+
 
     return JSONOutputConverter.getString(output)
 
