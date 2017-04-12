@@ -27,6 +27,18 @@ livyquery.livy_address = "http://"+config.host+":"+"8998"
 
 userid = 0
 
+def get_last_updated_file(directory):
+    max_mtime = 0
+    for dirname, subdirs, files in os.walk(directory):
+        for fname in files:
+            full_path = os.path.join(dirname, fname)
+            mtime = os.stat(full_path).st_mtime
+            if mtime > max_mtime:
+                max_mtime = mtime
+                max_file = fname
+
+    return max_file
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -239,7 +251,7 @@ def job_status(fileid, execid):
     status_output = livyquery.job_status(sessionid)
     if status_output.status_code == 404:
         output["status"] = "fail"
-        JSONOutputConverter.getString(output)
+        return JSONOutputConverter.getString(output)
 
     # get log status using livy
     livy_log = livyquery.log_status(sessionid)
@@ -247,7 +259,7 @@ def job_status(fileid, execid):
         output["status"] = "fail"
         output["result"] = dict()
         output["result"]["message"] = "Session not found"
-        JSONOutputConverter.getString(output)
+        return JSONOutputConverter.getString(output)
 
     livy_log = livy_log.json()["log"]
 
@@ -264,6 +276,7 @@ def job_status(fileid, execid):
     output["result"]["id"] = execid
     output["result"]["state"] = status_output.json()["state"]
     output["result"]["log"] = livy_log
+    output["result"]["logfile"] = get_last_updated_file(config.spark_events_path)
 
     return JSONOutputConverter.getString(output)
 
