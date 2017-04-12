@@ -387,7 +387,7 @@ getDataFiles();
                     }else if(result.state == 'dead'){
                         $('#job_status').css('color','red');
                         $('#job_status').html(result.state);
-                        $('#job_log').html("<br>Log: "+result.log); 
+                        $('#job_log').html("Error: "+result.print+"<br>Log: "+result.log); 
                         $('#download_results_but').hide();
                         
                     }else{
@@ -440,7 +440,7 @@ function checkStatus(fileid, execid) {
                     }else if(result.state == 'dead'){
                         $('#job_status').css('color','red'); 
                         $('#job_status').html(result.state); 
-                        $('#job_log').html("<br>Log: "+result.log); 
+                        $('#job_log').html("Error: "+result.print+"<br>Log: "+result.log); 
                         $('#download_results_but').hide(); 
                        
                     }else{

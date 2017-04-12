@@ -47,8 +47,8 @@ $(document).ready(function () {
 
         }
         
-        else if(extension != 'zip' ) {
-            alert("We only support zip files for now");
+        else if(extension != 'zip' || extension != 'txt' || extension != 'csv' ) {
+            alert("We only support zip/txt/csv files for now");
             flag = true;
 
         }

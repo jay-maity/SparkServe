@@ -29,6 +29,7 @@ userid = 0
 
 def get_last_updated_file(directory):
     max_mtime = 0
+    max_file = 'some.txt'
     for dirname, subdirs, files in os.walk(directory):
         for fname in files:
             full_path = os.path.join(dirname, fname)
