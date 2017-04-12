@@ -178,13 +178,24 @@
                             <div class="col-lg-6">
                                    
                                     <div class="form-group">
-                               <label>We are all ready to go !</small></label>
+                               <label>We are all ready to go !</label>
                                </div>
                                <div class="form-group">
                                <button onclick="submit_job()" type="button" class="btn btn-default">Submit PySpark Job </button>
+                               <input type="hidden" id="job_id" value="" />
                                </div>
                                
                                 <!-- /.col-lg-6 (nested) -->
+                            </div>
+
+                            <div class="col-lg-6">
+                                   
+                                    <div class="form-group">
+                               <label>Job Status</label> <br>
+                               <label> Job Id : <span id="job_id_label"> </span></label><br>
+                               <label> Status : <span id="job_status"> </span></label><br>
+
+                               </div>
                             </div>
                             <!-- /.row (nested) -->
                         </div>
@@ -246,7 +257,7 @@ getDataFiles();
             processData: false
         }, 'json');
 
-        return false;
+   
     }
 
     function getDataFiles(){
@@ -276,7 +287,6 @@ getDataFiles();
             processData: false
         }, 'json');
 
-        return false;
     }
 
     function submit_job(){
@@ -319,23 +329,44 @@ getDataFiles();
         jsonObj['args'] =allargs;
 
         console.log(JSON.stringify(jsonObj));
-
+        $('#job_id').val("");
+        $('#job_id_label').html("");
+        $('#job_status').html(""); 
         $.ajax({
             url: 'api/file/'+input_file+'/execute',
             type: 'POST',
             data: JSON.stringify(jsonObj),
             success: completeHandler = function (data) {
                     data = JSON.parse(data);
+                    $('#job_status').css('color','black'); 
                 if(data.status == 'success'){
-                    $.each(data.result , function(id,jdata){
-                        $('#select_input_data').append('<option value="'+jdata.id+'">'+jdata.filename+'</option>');
-                    });
+                    
+                    var result = data.result;
+
+                    $('#job_id').val(result.id);
+                    $('#job_id_label').html(result.id);
+                    
+
+                    if(result.state == 'success'){
+                        $('#job_status').css('color','green');
+                        $('#job_status').html(result.state);  
+                        alert('Job Completed');
+                        
+                    }else if(result.state == 'dead'){
+                        $('#job_status').css('color','red');
+                        $('#job_status').html(result.state); 
+                        
+                    }else{
+                        $('#job_status').html(result.state+'...');
+                        checkStatus(input_file, result.id)
+                    }
+                    
                 }
                      
                     },
                     error: errorHandler = function (error1) {
                         error1 = JSON.parse(error1);
-                        $('#select_data_msg').html(error1.statusText);
+                        alert(error1.statusText);
                     },
             // Form data
             // Options to tell jQuery not to process data or worry about the content-type
@@ -344,6 +375,51 @@ getDataFiles();
             processData: false
         }, 'json');
     }
+
+
+    var interval = 1000;  // 1000 = 1 second, 3000 = 3 seconds
+    var chk = true;
+function checkStatus(fileid, execid) {
+    $.ajax({
+            
+            url: 'api/file/'+fileid+'/'+execid+'/status',
+            success: function (data) {
+
+                    data = JSON.parse(data);
+                    $('#job_status').css('color','black'); 
+                if(data.status == 'success'){
+                    
+                    var result = data.result;
+
+                    $('#job_id').val(result.id);
+                    $('#job_id_label').html(result.id);
+                    
+                    if(result.state == 'success'){
+                         $('#job_status').css('color','green'); 
+                         $('#job_status').html(result.state);  
+                        alert('Job Completed');
+                        
+                        
+                    }else if(result.state == 'dead'){
+                        $('#job_status').css('color','red'); 
+                        $('#job_status').html(result.state);  
+                       
+                    }else{
+                        $('#job_status').html(result.state+'...');  
+                        setTimeout(checkStatus(fileid, execid), interval);
+                    }
+
+                    
+                }
+                   
+            },
+            complete: function (data) {
+                    // Schedule the next
+                    
+            }
+    });
+}
+
 
     </script>
 

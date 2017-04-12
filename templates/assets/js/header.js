@@ -21,6 +21,6 @@ document.write("    <!-- Morris Chart Js -->");
 document.write("    <script src=\"assets\/js\/morris\/raphael-2.1.0.min.js\"><\/script>");
 document.write("    <script src=\"assets\/js\/morris\/morris.js\"><\/script>");
 document.write("    <!-- Custom Js -->");
-document.write("    <script src=\"assets\/js\/custom-scripts.js\"><\/script>");
+/*document.write("    <script src=\"assets\/js\/custom-scripts.js\"><\/script>");*/
 
 document.write("<\/head>");
