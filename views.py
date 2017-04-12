@@ -191,10 +191,12 @@ def execute_file(fileid):
 
     sessionid = livy_output["id"]
 
-    time.sleep(1)
+    #time.sleep(1)
 
     livy_log = livyquery.log_status(sessionid).json()
     livy_log = livy_log["log"]
+
+    job_status = livyquery.job_status(sessionid).json()
 
     printed_output = analyzelog.get_output(livy_log)
 
@@ -209,8 +211,7 @@ def execute_file(fileid):
 
     output["result"]["print"] = printed_output
     output["result"]["id"] = exec_id
-    output["result"]["state"] = exec_output["status"]
-
+    output["result"]["state"] = job_status["status"]
 
     return JSONOutputConverter.getString(output)
 
