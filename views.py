@@ -164,7 +164,7 @@ def execute_file(fileid):
             data_file_path = config.data_file_path
             data_dict = json.loads(rdata)
             args = data_dict["args"]
-            args = sorted(args, key=lambda x: x["seq"])
+            args = sorted(args, key=lambda x: int(x["seq"]))
             for arg in args:
                 if arg["type"] == "file":
                     args_list.append(os.path.join(data_file_path,arg["argument"]))

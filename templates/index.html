@@ -111,7 +111,7 @@
                                         
                                         
 
-                                        <small class="upload-prog-status"></small>
+                                        
 
                                        </form>
                                         
@@ -129,7 +129,7 @@
                                         </div>
                                         
                                        
-                                        <small class="upload-data-status" style="color:red;"></small>
+
 
                                     </form>
                                 </div>
@@ -206,7 +206,7 @@
         var a = parseInt($("#select_args").val());
         $('#form_inputs').html('');
         for (i = 1; i <= a; i++) {
-            $('#form_inputs').append('<div class="form-group" ><label>Argument '+i+'</label><input class="form-control" id="input_arg_'+i+'" placeholder="Enter args"><label class="checkbox-inline"><input onclick="toggle_inputdata_check('+i+')" id="input_data_true_'+i+'" type="checkbox">Input Data</label></div>');
+            $('#form_inputs').append('<div class="form-group" ><label>Argument '+i+'</label><input class="form-control" id="input_arg_'+i+'" placeholder="Enter args"><label class="checkbox-inline"><input class="form_input_checkbox" onclick="toggle_inputdata_check('+i+')" id="input_data_true_'+i+'" input-no="'+i+'" type="checkbox">Input Data</label><label class="checkbox-inline"><input class="form_output_checkbox" output-no="'+i+'" id="output_data_true_'+i+'" type="checkbox">Output Folder</label></div>');
         }
     }
 
@@ -250,7 +250,8 @@ getDataFiles();
     }
 
     function getDataFiles(){
-        $('#select_data_msg').html("");
+        $('#select_data_msg').html('');
+        $('select_input_data').html('<option value="0">some</option>');
         $.ajax({
             url: 'api/datafiles',
             
@@ -278,6 +279,71 @@ getDataFiles();
         return false;
     }
 
+    function submit_job(){
+        var input_file = $('#select_input_prog').val();
+        var input_data = $('#select_input_data').val();
+
+        var data = new FormData();
+       
+        var jsonObj = {};
+            
+        allargs = [];   
+        $('.form_input_checkbox').each(function () {
+          
+        if($(this).is(':checked')){
+            var i = $(this).attr('input-no');
+            inargs = {};
+            inargs['seq'] = i;
+            inargs['type'] = 'file';
+            inargs['argument'] = input_data;
+            
+            allargs.push(inargs);
+        }else {
+            var i = $(this).attr('input-no');
+            inargs = {};
+            if($('#output_data_true_'+i).is(':checked')){
+                inargs['type'] = 'output';
+            }else{
+                inargs['type'] = 'value';
+            }
+            
+            inargs['seq'] = i;
+            
+            inargs['argument'] = $('#input_arg_'+i).val();
+            
+           allargs.push(inargs);
+            
+        }
+    });
+
+        jsonObj['args'] =allargs;
+
+        console.log(JSON.stringify(jsonObj));
+
+        $.ajax({
+            url: 'api/file/'+input_file+'/execute',
+            type: 'POST',
+            data: JSON.stringify(jsonObj),
+            success: completeHandler = function (data) {
+                    data = JSON.parse(data);
+                if(data.status == 'success'){
+                    $.each(data.result , function(id,jdata){
+                        $('#select_input_data').append('<option value="'+jdata.id+'">'+jdata.filename+'</option>');
+                    });
+                }
+                     
+                    },
+                    error: errorHandler = function (error1) {
+                        error1 = JSON.parse(error1);
+                        $('#select_data_msg').html(error1.statusText);
+                    },
+            // Form data
+            // Options to tell jQuery not to process data or worry about the content-type
+            cache: false,
+            contentType: false,
+            processData: false
+        }, 'json');
+    }
 
     </script>
 
