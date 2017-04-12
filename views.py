@@ -267,8 +267,32 @@ def job_status(fileid, execid):
 
     return JSONOutputConverter.getString(output)
 
+
 @app.route('/api/file/<execid>/output')
 def get_output(execid):
+    """
+    get the status
+    :return:
+    """
+    output = dict()
+    dml = DataManager.OutputDataManager(connection)
+
+    sessionid = None
+
+    # get the session id from execution details
+    exec_output = dml.get_exec_details(execid)
+    if exec_output["status"] == "success":
+        output["status"] = "success"
+        output["result"] = dict()
+    else:
+        output["status"] = "fail"
+        output["result"] = dict()
+        output["result"]["message"] = "Session id not found"
+
+    return JSONOutputConverter.getString(output)
+
+@app.route('/api/file/<execid>/output/download')
+def download_output(execid):
     """
     get the status
     :return:
@@ -289,7 +313,3 @@ def get_output(execid):
             output_file_path = os.path.join(config.data_file_path,"output"+str(datetime.now()))
             shutil.make_archive(output_file_path, 'zip', output_folder)
             return send_file(output_file_path+".zip")
-    else:
-        output["status"] = "fail"
-        output["result"] = dict()
-        output["result"]["message"] = "Session id not found"
