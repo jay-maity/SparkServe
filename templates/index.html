@@ -194,6 +194,7 @@
                                <label>Job Status</label> <br>
                                <label> Job Id : <span id="job_id_label"> </span></label><br>
                                <label> Status : <span id="job_status"> </span></label><br>
+                               <label> Output : <span id="job_output"> </span></label><br>
                                <label id="job_log"> </label><br>
 
                                </div>
@@ -382,6 +383,7 @@ getDataFiles();
                         $('#job_status').css('color','green');
                         $('#job_status').html(result.state);  
                         alert('Job Completed');
+                        $('#job_output').html(result.print);
                         $('#download_results_but').show();
                         
                     }else if(result.state == 'dead'){
@@ -432,7 +434,7 @@ function checkStatus(fileid, execid) {
                     if(result.state == 'success'){
                          $('#job_status').css('color','green'); 
                          $('#job_status').html(result.state);  
-
+                         $('#job_output').html(result.print);
                         alert('Job Completed');
                         $('#download_results_but').show();
                         
