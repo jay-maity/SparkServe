@@ -291,7 +291,7 @@ getDataFiles();
 
     function getDataFiles(){
         $('#select_data_msg').html('');
-        $('select_input_data').html('<option value="0">some</option>');
+        $('#select_input_data').html('<option value="0"></option>');
         $.ajax({
             url: 'api/datafiles',
             
@@ -412,7 +412,7 @@ getDataFiles();
     }
 
 
-    var interval = 1000;  // 1000 = 1 second, 3000 = 3 seconds
+    var interval = 10000;  // 1000 = 1 second, 3000 = 3 seconds
     var chk = true;
 function checkStatus(fileid, execid) {
     $.ajax({

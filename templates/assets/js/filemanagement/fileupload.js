@@ -74,6 +74,7 @@ $(document).ready(function () {
                       
                         $(".upload-prog-status").html("File Uploaded");
                         $(".upload-prog-status").css('color','green');
+                        getProgFiles();
                     },
                     error: errorHandler = function (error1) {
                         $(".upload-prog-status").html("File Upload failed");
@@ -101,6 +102,7 @@ $(document).ready(function () {
                       
                         $(".upload-data-status").html("File Uploaded");
                         $(".upload-data-status").css('color','green');
+                        getDataFiles();
                     },
                     error: errorHandler = function (error1) {
                         $(".upload-data-status").html("File Upload failed");
