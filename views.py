@@ -12,7 +12,7 @@ from datetime import datetime
 
 
 
-ALLOWED_EXTENSIONS = set(['txt', 'py'])
+ALLOWED_EXTENSIONS = set(['txt', 'py', 'zip'])
 
 app = Flask(__name__,
             static_folder=config.static_folder,
@@ -211,7 +211,7 @@ def execute_file(fileid):
 
     output["result"]["print"] = printed_output
     output["result"]["id"] = exec_id
-    output["result"]["state"] = job_status["status"]
+    output["result"]["state"] = job_status["state"]
 
     return JSONOutputConverter.getString(output)
 
