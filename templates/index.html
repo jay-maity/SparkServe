@@ -477,6 +477,8 @@ function checkStatus(fileid, execid) {
                    
 
                     
+                }else if(data.status == 'success'){
+                    window.open('http://'+window.location.hostname+':'+location.port+'/api/file/'+job_id+'/output/download', '_blank');
                 }
                    
             },
